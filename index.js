@@ -75,21 +75,27 @@ module.exports = function(gulp) {
     var status = evt.type;
     var path = evt.path;
     var relPath = pathLib.relative('./app', evt.path);
+    var srcPath = path;
+    var destPath = './' + paths.dist;
+
     if (status === 'changed') {
       log.mark('[MODIFY] --> ' + relPath);
-      return gulp.src(path)
-        .pipe(gulp.dest(paths.dist));
+      return gulp.src(srcPath)
+        .pipe($.concat(relPath))
+        .pipe(gulp.dest(destPath));
     } else if (status === 'added') {
       log.mark('[ADDED] --> ' + relPath);
-      return gulp.src(path)
-        .pipe(gulp.dest(paths.dist));
+      return gulp.src(srcPath)
+        .pipe($.concat(relPath))
+        .pipe(gulp.dest(destPath));
     } else if (status === 'renamed') {
       log.mark('[RENAMED] --> ' + relPath);
-      return gulp.src(path)
-        .pipe(gulp.dest(paths.dist));
+      return gulp.src(srcPath)
+        .pipe($.concat(relPath))
+        .pipe(gulp.dest(destPath));
     } else if (status === 'deleted') {
       log.mark('[DELETED] --> ' + relPath);
-      return gulp.src(paths.dist + '/' + relPath)
+      return gulp.src(destPath + '/' +relPath)
         .pipe($.rimraf());
     }
   };
