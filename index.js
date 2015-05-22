@@ -180,6 +180,16 @@ module.exports = function(gulp) {
 
     nonResources: function(nrsc) {
       nonResources = nrsc;
+    },
+
+    setAsPods: function() {
+      paths = {
+        app: 'app',
+        scripts: '',
+        styles: '',
+        templates: '', /* templates are not used currently */
+        dist: 'dist'
+      };
     }
   };
 };
