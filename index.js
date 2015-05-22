@@ -248,6 +248,17 @@ module.exports = function(gulp, options) {
 
     options: function(newOptions) {
       _.merge(options, newOptions);
+      nonResources = nrsc;
+    },
+
+    setAsPods: function() {
+      paths = {
+        app: 'app',
+        scripts: '',
+        styles: '',
+        templates: '', /* templates are not used currently */
+        dist: 'dist'
+      };
     }
   };
 };
