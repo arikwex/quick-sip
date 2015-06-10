@@ -9,14 +9,14 @@ project
   |-- package.json
   |-- gulpfile.js
   |-- app
+       |-- app.js
+       |-- app.scss
+       |
        |-- scripts
-       |      |-- main.js
        |      |-- chairModel.js
        |      |-- chairView.js
        |
        |-- styles
-       |      |-- core.scss
-       |      |-- whatever.scss
        |      |-- _chair.scss
        |      |-- _engraved.scss
        |
@@ -28,16 +28,12 @@ After running the build task, a "dist" directory will be created:
 project
    | ...
    |-- dist
-        |-- scripts
-        |      |-- app.js
-        |
-        |-- styles
-        |      |-- core.css
-        |      |-- whatever.css
+        |-- app.js
+        |-- app.scss
         |
         |-- index.html
 ```
-**app.js** is the browserified application that main.js completely specifies.
+**app.js** is the browserified application that app.js completely specifies.
 **core.css & whatever.css** are the sass-lib compiled css files.
 
 ## Executing Tasks
