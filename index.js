@@ -1,8 +1,21 @@
-module.exports = function(gulp) {
+/**
+ * @class Quick-Sip
+ * @constructor
+ * @param gulp {Gulp} reference to the gulp object.
+ * @param options {Object} configuration options for the build task.
+ *  @param options.transformStack {String[]} array of transforms to apply during the browserify process
+ *  @param options.rootJS {String} path (relative or absolute) to the main .js file to start bundling.
+ *  @param options.dist {String} path (relative or absolute) to where you want the distribution.
+ *  @param options.skipScss {Boolean} whether to skip compiling the styles.
+ *  @param options.skipCopyResources {Boolean} whether to skip the copy resources step.
+ *  @param options.failOnError {Boolean} whether failures during the browserify process should error the build or continue.
+ */
+module.exports = function(gulp, options) {
+  options = options || {};
   var browserifyBundler,
-    failOnError = false,
-    transformStack = [],
-    nonResources = 'js|css|scss',
+    failOnError = options.failOnError || false,
+    transformStack = options.transformStack || [],
+    nonResources = options.nonResources || 'js|css|scss',
     fs = require('fs'),
     gulpLoadPlugins = require('gulp-load-plugins'),
     $ = gulpLoadPlugins({}),
@@ -20,14 +33,20 @@ module.exports = function(gulp) {
       styles: 'styles',
       templates: 'scripts/**/templates',
       dist: 'dist',
-      rootJs: 'main',
-      rootScss: 'app'
+      rootJs: options.rootJS || 'main',
+      rootScss: options.rootScss || 'app'
     },
     buildTasks = [
-      'copy-resources',
-      'build-styles',
       'build-app'
     ];
+
+  if (!options.skipCopyResources) {
+    buildTasks.push('copy-resources');
+  }
+
+  if (!options.skipScss) {
+    buildTasks.push('build-styles');
+  }
 
   function defaultPath(path, defaultPath) {
     if (path && path[0] === '.' || path[0] === '/') {
