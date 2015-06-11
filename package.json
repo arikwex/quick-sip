@@ -23,8 +23,5 @@
   },
   "engines": {
     "node": ">=0.8.0"
-  },
-  "devDependencies": {
-    "del": "^1.2.0"
   }
 }
