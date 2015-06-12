@@ -109,8 +109,12 @@ module.exports = function(gulp, options) {
 
   /* Clean the options.dist directory */
   gulp.task(options.taskPrefix + 'clean', function(callback) {
-    log.mark('[CLEAN] deleting ' + options.clean.dist);
-    del(options.clean.dist, callback);
+    if (!options.clean.skip) {
+      log.mark('[CLEAN] deleting ' + options.clean.dist);
+      del(options.clean.dist, callback);
+    } else {
+      callback();
+    }
   });
 
   /* Copy all resources to dist */
@@ -243,7 +247,7 @@ module.exports = function(gulp, options) {
     },
 
     options: function(newOptions) {
-      options = _.merge(options, newOptions);
+      _.merge(options, newOptions);
     }
   };
 };
