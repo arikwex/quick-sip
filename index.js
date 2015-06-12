@@ -18,12 +18,7 @@
  *  @param options.debug {Boolean} whether to run browserify in debug mode.
  */
 module.exports = function(gulp, options) {
-  options = options || {};
-  var browserifyBundler,
-      taskPrefix = options.taskPrefix || '',
-      failOnError = options.failOnError || false,
-      transformStack = options.transformStack || [],
-      nonResources = options.nonResources || 'js|css|scss',
+  var _ = require('lodash'),
       fs = require('fs'),
       gulpLoadPlugins = require('gulp-load-plugins'),
       $ = gulpLoadPlugins({}),
@@ -34,39 +29,61 @@ module.exports = function(gulp, options) {
       buffer = require('vinyl-buffer'),
       watchify = require('watchify'),
       browserify = require('browserify'),
-      runSequence = require('run-sequence').use(gulp),
-      paths = {
-        app: options.rootSrc || 'app',
-        scripts: 'scripts',
-        styles: 'styles',
-        templates: 'scripts/**/templates',
-        dist: options.dist || 'dist',
-        rootJs: options.rootJS || 'main',
-        rootScss: options.rootScss || 'app'
-      },
+      runSequence = require('run-sequence').use(gulp);
+
+  var browserifyBundler,
       buildTasks = [];
 
-  if (!options.skipCopyResources) {
-    buildTasks.push(taskPrefix + 'copy-resources');
-  }
+  // Properties used in the defaults below.
+  options = _.merge({
+    src: 'app',
+    dist: 'dist'
+  }, options);
 
-  if (!options.skipScss) {
-    buildTasks.push(taskPrefix + 'build-styles');
-  }
-
-  if (!options.skipBrowserify) {
-    buildTasks.push(taskPrefix + 'build-app');
-  }
-
-  function defaultPath(path, defaultPath) {
-    if (typeof path === 'string') {
-      if (path[0] === '.' || path[0] === '/') {
-        return path;
-      }
-      return defaultPath + path;
+  // Default options
+  options = _.merge({
+    taskPrefix: '',
+    styles: 'styles',
+    clean: {
+      skip: false,
+      dist: options.dist
+    },
+    browserify: {
+      skip: false,
+      transformStack: [],
+      root: './' + options.src + '/scripts/main',
+      out: 'app.js',
+      failOnError: false,
+      debug: $.util.env.type !== 'production',
+      dist: options.dist + '/scripts'
+    },
+    sass: {
+      skip: false,
+      src: options.src + '/**/*.scss',
+      root: options.src + '/app',
+      includes: [],
+      dist: options.dist
+    },
+    copy: {
+      skip: false,
+      nonResources: 'js|css|scss',
+      src: options.src,
+      dist: options.dist
     }
-    return path;
-  };
+  }, options);
+
+  // Setup build tasks.
+  if (!options.copy.skip) {
+    buildTasks.push(options.taskPrefix + 'copy-resources');
+  }
+
+  if (!options.sass.skip) {
+    buildTasks.push(options.taskPrefix + 'build-styles');
+  }
+
+  if (!options.browserify.skip) {
+    buildTasks.push(options.taskPrefix + 'build-app');
+  }
 
   /* Current date-time printer */
   function currentDateTime() {
@@ -80,8 +97,8 @@ module.exports = function(gulp, options) {
   /* Browserify bundler */
   watchify.args.debug = ($.util.env.type !== 'production' || options.debug);
   function configureBrowserify(browserifyBundler) {
-    browserifyBundler.add(defaultPath(paths.rootJs, './' + paths.app + '/' + paths.scripts + '/'));
-    transformStack.forEach(function(transform) {
+    browserifyBundler.add(options.browserify.root);
+    options.browserify.transformStack.forEach(function(transform) {
       if (transform.name) {
         browserifyBundler.transform(transform.name, transform.options);
       } else {
@@ -90,10 +107,10 @@ module.exports = function(gulp, options) {
     })
   };
 
-  /* Clean the paths.dist directory */
-  gulp.task(taskPrefix + 'clean', function(callback) {
-    log.mark('[CLEAN] deleting ' + paths.dist);
-    del(paths.dist, callback);
+  /* Clean the options.dist directory */
+  gulp.task(options.taskPrefix + 'clean', function(callback) {
+    log.mark('[CLEAN] deleting ' + options.clean.dist);
+    del(options.clean.dist, callback);
   });
 
   /* Copy all resources to dist */
@@ -101,29 +118,29 @@ module.exports = function(gulp, options) {
     var bytes = 0,
         startTime = +new Date();
     return gulp.src([
-        paths.app + '/**/*.*',
-        '!' + paths.app + '/**/*.+(' + nonResources + ')',
+        options.copy.src + '/**/*.*',
+        '!' + options.copy.src + '/**/*.+(' + options.browserify.nonResources + ')',
       ])
       .pipe($.tap(function(file, callback) {
         bytes += fs.statSync(file.path).size;
         return callback;
       }))
-      .pipe(gulp.dest(paths.dist))
+      .pipe(gulp.dest(options.copy.dist))
       .pipe($.concat('tmp'))
       .pipe($.tap(function() {
         var endTime = +new Date();
         log.mark('[RESOURCES] ' + bytes + ' bytes written (' + (endTime - startTime)/1000.0 + ' seconds)');
       }));
   };
-  gulp.task(taskPrefix + 'copy-resources', copyResources);
+  gulp.task(options.taskPrefix + 'copy-resources', copyResources);
 
   /* Handle single resource events for dist */
   function copyResource(evt, callback) {
     var status = evt.type,
         path = evt.path,
-        relPath = pathLib.relative('./app', evt.path),
+        relPath = pathLib.relative('./' + options.copy.src, evt.path),
         srcPath = path,
-        destPath = './' + paths.dist;
+        destPath = './' + options.copy.dist;
 
     if (status === 'changed') {
       log.mark('[MODIFY] --> ' + relPath);
@@ -148,10 +165,10 @@ module.exports = function(gulp, options) {
 
   /* Build all styles */
   function buildStyles() {
-    return gulp.src([options.rootSrc || (paths.app + '/**/*.scss')])
+    return gulp.src(options.sass.src)
       .pipe($.sass({
-        file: defaultPath(paths.rootScss, paths.app),
-        includePaths: options.scssIncludes || [],
+        file: options.sass.root,
+        includePaths: options.sass.includes,
         onSuccess: function(err) {
           log.mark('[SASS] ' + err.css.length + ' bytes written (' + (err.stats.duration / 1000.0) + ' seconds)');
         },
@@ -162,9 +179,9 @@ module.exports = function(gulp, options) {
         }
       }))
       .pipe($.autoprefixer())
-      .pipe(gulp.dest(paths.dist))
+      .pipe(gulp.dest(options.sass.dist))
   };
-  gulp.task(taskPrefix + 'build-styles', buildStyles);
+  gulp.task(options.taskPrefix + 'build-styles', buildStyles);
 
   /* Reduce all javascript to app.js */
   function buildApp() {
@@ -173,25 +190,25 @@ module.exports = function(gulp, options) {
         delete err.stream;
         log.error('[BROWSERIFY] @ ' + currentDateTime());
         log.warn(err.toString());
-        if (!browserifyBundler.continueOnError && failOnError) {
+        if (!browserifyBundler.continueOnError && options.browserify.failOnError) {
           throw err;
         }
         return true;
       })
-      .pipe(source(options.browserifyResult || 'app.js'))
+      .pipe(source(options.browserify.out))
       .pipe(buffer())
       .pipe($.util.env.type !== 'production' ? $.sourcemaps.init({loadMaps: true}) : $.util.noop())
       .pipe($.util.env.type === 'production' ? $.uglify() : $.util.noop())
       .pipe($.util.env.type !== 'production' ? $.sourcemaps.write('./') : $.util.noop())
-      .pipe(gulp.dest(options.dist || (paths.dist + '/' + paths.scripts)));
+      .pipe(gulp.dest(options.browserify.dist));
   };
-  gulp.task(taskPrefix + 'build-app', buildApp);
+  gulp.task(options.taskPrefix + 'build-app', buildApp);
 
   /* Full build */
-  gulp.task(taskPrefix + 'build', function(callback) {
+  gulp.task(options.taskPrefix + 'build', function(callback) {
     browserifyBundler = browserify(watchify.args);
     configureBrowserify(browserifyBundler);
-    runSequence(taskPrefix + 'clean', buildTasks,
+    runSequence(options.taskPrefix + 'clean', buildTasks,
       function() {
         log.mark('[BROWSERIFY] complete!');
         callback();
@@ -203,56 +220,30 @@ module.exports = function(gulp, options) {
     browserifyBundler = watchify(browserify(watchify.args));
     browserifyBundler.continueOnError = true;
     configureBrowserify(browserifyBundler);
-    gulp.watch(paths.app + '/' + paths.styles + '/**/*.scss', buildStyles);
+    gulp.watch(options.sass.src, buildStyles);
     gulp.watch([
-      paths.app + '/**/*.*',
-      '!' + paths.app + '/**/*.+(' + nonResources +')',
+      options.copy.src + '/**/*.*',
+      '!' + options.copy.src + '/**/*.+(' + options.copy.nonResources +')',
     ], copyResource);
     browserifyBundler.on('update', buildApp);
     browserifyBundler.on('log', function(data) {
       log.mark('[BROWSERIFY] ' + data.toString());
     });
-    runSequence(taskPrefix + 'clean', buildTasks);
+    runSequence(options.taskPrefix + 'clean', buildTasks);
   });
 
   /* Returns public configuration API */
   return {
     transform: function(fn) {
-      transformStack.push(fn);
+      options.browserify.transformStack.push(fn);
     },
 
     nonResources: function(nrsc) {
-      nonResources = nrsc;
+      options.browserify.nonResources = nrsc;
     },
 
-    setRootJS: function(rootJs) {
-      paths.rootJs = rootJs;
-    },
-
-    setRootSCSS: function(rootScss) {
-      paths.rootScss = rootScss;
-    },
-
-    setDist: function(dist) {
-      paths.dist = dist;
-    },
-
-    setNoScss: function() {
-      var buildStylesIndex = buildTasks.indexOf(taskPrefix + 'build-styles');
-      if (buildStylesIndex > -1) {
-        buildTasks.splice(buildStylesIndex, 1);
-      }
-    },
-
-    setNoCopyResources: function() {
-      var copyResourcesIndex = buildTasks.indexOf(taskPrefix + 'copy-resources');
-      if (copyResourcesIndex > -1) {
-        buildTasks.splice(copyResourcesIndex, 1);
-      }
-    },
-
-    setFailOnError: function() {
-      failOnError = true;
+    options: function(newOptions) {
+      options = _.merge(options, newOptions);
     }
   };
 };
