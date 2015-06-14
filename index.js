@@ -1,6 +1,7 @@
 module.exports = function(gulp) {
   var browserifyBundler, copyResources, copyResource, buildStyles, buildApp, configureBrowserify,
     transformStack = [],
+    styleIncludePaths = [],
     nonResources = 'js|css|scss',
     fs = require('fs'),
     gulpLoadPlugins = require('gulp-load-plugins'),
@@ -11,6 +12,7 @@ module.exports = function(gulp) {
     buffer = require('vinyl-buffer'),
     watchify = require('watchify'),
     browserify = require('browserify'),
+    _ = require('underscore'),
     runSequence = require('run-sequence').use(gulp),
     paths = {
       app: 'app',
@@ -104,7 +106,7 @@ module.exports = function(gulp) {
   buildStyles = function() {
     return gulp.src([paths.app + '/**/*.scss'])
     .pipe($.sass({
-      includePaths: [],
+      includePaths: styleIncludePaths,
       onSuccess: function(err) {
         log.mark('[SASS] ' + err.css.length + ' bytes written (' + (err.stats.duration / 1000.0) + ' seconds)');
       },
@@ -180,6 +182,16 @@ module.exports = function(gulp) {
 
     nonResources: function(nrsc) {
       nonResources = nrsc;
+    },
+
+    configurePaths: function(options) {
+      _.extend(paths, options);
+    },
+
+    addToStylesIncludePaths: function(includePaths) {
+      _.each(includePaths, function(path) {
+        styleIncludePaths.push(path);
+      });
     }
   };
 };
