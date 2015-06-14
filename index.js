@@ -18,7 +18,6 @@ module.exports = function(gulp) {
       app: 'app',
       scripts: 'scripts',
       styles: 'styles',
-      templates: 'scripts/**/templates',
       dist: 'dist'
     };
 
