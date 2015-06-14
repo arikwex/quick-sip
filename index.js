@@ -1,7 +1,7 @@
 module.exports = function(gulp) {
   var browserifyBundler, copyResources, copyResource, buildStyles, buildApp, configureBrowserify,
     transformStack = [],
-    styleIncludePaths = ['.'],
+    styleIncludePaths = [],
     nonResources = 'js|css|scss',
     fs = require('fs'),
     gulpLoadPlugins = require('gulp-load-plugins'),
@@ -185,10 +185,7 @@ module.exports = function(gulp) {
     },
 
     configurePaths: function(options) {
-
-      console.log(options);
       _.extend(paths, options);
-      console.log(paths);
     },
 
     addToStylesIncludePaths: function(includePaths) {
