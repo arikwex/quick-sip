@@ -40,7 +40,7 @@ module.exports = function(gulp, options) {
     browserifyBundler.add(options.root);
     options.transformStack.forEach(function(transform) {
       if (transform.name) {
-        browserifyBundler.transform(transform.name, transform.options);
+        browserifyBundler.transform(transform.transform, transform.options);
       } else {
         browserifyBundler.transform(transform);
       }
