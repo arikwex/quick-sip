@@ -55,74 +55,34 @@ The gulp tasks you care about are:
 Easy!
 ```javascript
 var gulp = require('gulp');
-var buildProcess = require('quick-sip')(gulp);
-/* Transforms */
-buildProcess.transform('aliasify');
-buildProcess.transform('hbsfy');
-buildProcess.transform(yourCustomThroughTransform);
+var buildProcess = require('quick-sip')(gulp, {
+  browserify: {
+    transforms: [
+      { transform: 'aliasify', options: { global: true } },
+      'hbsfy',
+      yourCustomThroughTransform
+    ]
+  }
+});
 ```
 
 ## Defining Resource Exclusion Extensions
 Easy!
 ```javascript
 var gulp = require('gulp');
-var buildProcess = require('quick-sip')(gulp);
-/* Assets */
-buildProcess.nonResources('js|css|scss|hbs|frag|vert');
+var buildProcess = require('quick-sip')(gulp, {
+  copy: {
+    excludes: 'js|css|scss|hbs|frag|vert'
+  }
+});
 ```
 
 ## Configuration Details
-The configurations can either be specified after the build proces is created or as an optional property to creating the build process.
-Adding options deeply merged with defaults and previously set options so you will only be changing the options you specify.
+The configurations are specified as an optional property when creating the build processes.
 ```javascript
 var gulp = require('gulp');
-var buildProcess = require('quick-sip')(gulp, {
-  transformStack: [
-    'aliasify',
-    'hbsfy',
-    yourCustomThroughTransform
-  ]
-});
+var buildProcess = require('quick-sip')(gulp, options);
 ```
-VS.
-```javascript
-var gulp = require('gulp');
-var buildProcess = require('quick-sip')(gulp);
-/* Transforms */
-buildProcess.options({
-  transformStack: [
-    'aliasify',
-    'hbsfy',
-    yourCustomThroughTransform
-  ]
-});
-```
-VS.
-```
-var gulp = require('gulp');
-var buildProcess = require('quick-sip')(gulp);
-/* Transforms */
-buildProcess.transform('aliasify');
-buildProcess.transform('hbsfy');
-buildProcess.transform(yourCustomThroughTransform);
-```
-### Methods
-
-#### buildProcess.transform(transformName)
-`transformName` is the name of the transform to add.
-
-#### buildProcess.transform(transform)
-`transform` is the actual transform object to pass to browserify.
-
-#### buildProcess.transform(transformOptions)
-This form is used to pass options to the browserify transform.
-```javascript
-var transform = {
-  transform: 'aliasify', // can be the name or function
-  options: { global: true }
-}
-buildProcess.transform(transform)
-`
-`transform.transform` is either the
-
 ### Options
+The options are grouped by task with some top level defaults.  The defaults are also slightly different depending on if you are configuring a task directly vs. through the aggregate build generator.
+#### taskPrefix
