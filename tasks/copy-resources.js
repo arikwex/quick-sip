@@ -13,7 +13,7 @@ module.exports = function(gulp, newCopyOptions) {
           startTime = +new Date();
       return gulp.src([
           options.copy.src + '/**/*.*',
-          '!' + options.copy.src + '/**/*.+(' + options.copy.excludes + ')',
+          '!' + options.copy.src + '/**/*.+(' + options.copy.excludes + ')'
         ])
         .pipe($.tap(function(file, callback) {
           bytes += fs.statSync(file.path).size;
