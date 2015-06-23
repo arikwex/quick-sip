@@ -29,12 +29,15 @@ project
    | ...
    |-- dist
         |-- app.js
-        |-- app.scss
+        |-- app.js.map
+        |-- app.css
         |
         |-- index.html
 ```
 **app.js** is the browserified application that app.js completely specifies.
-**core.css & whatever.css** are the sass-lib compiled css files.
+**app.js.map** is the source map for the browserified app.js bundle.
+**app.scss** is compiled by sass into app.css.
+**index.html** is copied from the source during the copy-resources task.
 
 ## Executing Tasks
 Your **gulpfile.js** only needs the following to give you access to the build tasks:
