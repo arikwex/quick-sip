@@ -6,6 +6,7 @@ var options = {};
 module.exports = options;
 
 module.exports.updateOptions = function(newOptions) {
+  console.log("newOptions: ", newOptions)
   var bundleDefaults,
       baseBundleDefaults = {
         taskPrefix: '',
@@ -17,8 +18,8 @@ module.exports.updateOptions = function(newOptions) {
         copy: {} // see defaults in ./tasks/copy-resources.js - only included here for the skips below.
       };
 
-  // Properties used in the defaults below.
-  _.merge(options, baseBundleDefaults, options, newOptions);
+  // Properties used in the defaults below.  2nd merge is to perserve the options object reference.
+  _.merge(options, _.merge(baseBundleDefaults, options, newOptions));
 
   bundleDefaults = {
     clean: {
@@ -48,7 +49,8 @@ module.exports.updateOptions = function(newOptions) {
     },
   };
 
-  _.merge(options, bundleDefaults, options);
+  // 2nd merge is to perserve the options object reference.
+  _.merge(options, _.merge(bundleDefaults, options));
 
   return options;
 };
