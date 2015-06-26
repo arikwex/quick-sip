@@ -9,7 +9,7 @@
     "url": "https://github.com/arikwex/quick-sip/issues"
   },
   "license": "MIT",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "dependencies": {
     "browserify": "^9.0.3",
     "color-log": "^0.0.2",
