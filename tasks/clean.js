@@ -3,7 +3,7 @@ var del = require('del'),
     options = require('./utils/options');
 
 module.exports = function(gulp, newCleanOptions) {
-  options.updateOptions({ clean: newCleanOptions });
+  options.updateOptions(newCleanOptions);
 
   if (!options.clean.skip) {
     /* Clean the options.clean.dist directory */
