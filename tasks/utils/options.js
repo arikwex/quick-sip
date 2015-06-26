@@ -6,7 +6,6 @@ var options = {};
 module.exports = options;
 
 module.exports.updateOptions = function(newOptions) {
-  console.log("newOptions: ", newOptions)
   var bundleDefaults,
       baseBundleDefaults = {
         taskPrefix: '',
