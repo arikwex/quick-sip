@@ -4,7 +4,7 @@ var $ = require('gulp-load-plugins')({}),
     options = require('./utils/options');
 
 module.exports = function(gulp, newCopyOptions) {
-  options.updateOptions({ copy: newCopyOptions });
+  options.updateOptions(newCopyOptions);
 
   if (!options.copy.skip) {
     /* Copy all resources to dist */

@@ -10,7 +10,7 @@ var $ = require('gulp-load-plugins')({}),
 module.exports = function(gulp, newBrowserifyOptions) {
   var browserifyBundler;
 
-  options.updateOptions({ browserify: newBrowserifyOptions });
+  options.updateOptions(newBrowserifyOptions);
 
   function configureBrowserify(browserifyBundler) {
     browserifyBundler.add(options.browserify.root);

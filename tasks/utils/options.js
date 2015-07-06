@@ -45,7 +45,7 @@ module.exports.updateOptions = function(newOptions) {
       src: options.src,
       excludes: 'scss',
       dist: options.dist
-    },
+    }
   };
 
   // 2nd merge is to perserve the options object reference.

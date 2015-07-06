@@ -4,7 +4,7 @@ var $ = require('gulp-load-plugins')({}),
     options = require('./utils/options');
 
 module.exports = function(gulp, newStylesOptions) {
-  options.updateOptions({ styles: newStylesOptions });
+  options.updateOptions(newStylesOptions);
 
   if (!options.styles.skip) {
     /* Build all styles */
