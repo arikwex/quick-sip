@@ -1,13 +1,10 @@
 var log = require('color-log'),
     runSequenceGenerator = require('run-sequence'),
-    createBundleTasks = require('./utils/createBundleTasks'),
-    options = require('./utils/options');
+    createBundleTasks = require('./utils/createBundleTasks');
 
-module.exports = function(gulp, bundleOptions) {
+module.exports = function(gulp, options) {
   var tasks;
-
-  options.updateOptions(bundleOptions);
-  tasks = createBundleTasks(gulp);
+  tasks = createBundleTasks(gulp, options);
 
   /* Full build */
   gulp.task(options.taskPrefix + 'build', function(callback) {

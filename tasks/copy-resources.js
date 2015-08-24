@@ -1,10 +1,8 @@
 var $ = require('gulp-load-plugins')({}),
     fs = require('fs'),
-    log = require('color-log'),
-    options = require('./utils/options');
+    log = require('color-log');
 
-module.exports = function(gulp, newCopyOptions) {
-  options.updateOptions(newCopyOptions);
+module.exports = function(gulp, options) {
 
   if (!options.copy.skip) {
     /* Copy all resources to dist */

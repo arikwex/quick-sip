@@ -3,14 +3,12 @@ var $ = require('gulp-load-plugins')({}),
     log = require('color-log'),
     pathLib = require('path'),
     runSequenceGenerator = require('run-sequence'),
-    createBundleTasks = require('./utils/createBundleTasks'),
-    options = require('./utils/options');
+    createBundleTasks = require('./utils/createBundleTasks');
 
-module.exports = function(gulp, bundleOptions) {
+module.exports = function(gulp, options) {
   var tasks;
 
-  options.updateOptions(bundleOptions);
-  tasks = createBundleTasks(gulp);
+  tasks = createBundleTasks(gulp, options);
 
   /* Handle single resource events for watch */
   function copyResource(evt, callback) {
@@ -39,7 +37,7 @@ module.exports = function(gulp, bundleOptions) {
       log.mark('[DELETED] --> ' + relPath);
       del(destPath + '/' + relPath, callback);
     }
-  };
+  }
 
   /* Watch build */
   gulp.task(options.taskPrefix + 'watch', function() {

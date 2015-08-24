@@ -3,17 +3,19 @@ var cleanTaskGenerator = require('../clean'),
     stylesTaskGenerator = require('../build-styles'),
     browserifyTaskGenerator = require('../build-app');
 
-var initialized = false,
-    tasks = {};
+// Initialized stores whether a task with a particular prefix was initialized before
+var initialized = {};
 
-module.exports = function(gulp) {
-  if (!initialized) {
-    tasks.copy = copyTaskGenerator(gulp);
-    tasks.styles = stylesTaskGenerator(gulp);
-    tasks.browserify = browserifyTaskGenerator(gulp);
-    tasks.clean = cleanTaskGenerator(gulp);
-    initialized = true;
+module.exports = function(gulp, options) {
+  var tasks = {},
+      taskPrefix = options.taskPrefix;
+  if (!initialized[taskPrefix]) {
+    tasks.copy = copyTaskGenerator(gulp, options);
+    tasks.styles = stylesTaskGenerator(gulp, options);
+    tasks.browserify = browserifyTaskGenerator(gulp, options);
+    tasks.clean = cleanTaskGenerator(gulp, options);
+    initialized[taskPrefix] = true;
   }
 
   return tasks;
-}
+};
