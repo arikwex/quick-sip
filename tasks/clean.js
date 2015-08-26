@@ -1,9 +1,7 @@
 var del = require('del'),
-    log = require('color-log'),
-    options = require('./utils/options');
+    log = require('color-log');
 
-module.exports = function(gulp, newCleanOptions) {
-  options.updateOptions(newCleanOptions);
+module.exports = function(gulp, options) {
 
   if (!options.clean.skip) {
     /* Clean the options.clean.dist directory */

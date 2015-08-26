@@ -4,13 +4,10 @@ var $ = require('gulp-load-plugins')({}),
     browserify = require('browserify'),
     currentDateTime = require('./utils/currentDateTime'),
     source = require('vinyl-source-stream'),
-    buffer = require('vinyl-buffer'),
-    options = require('./utils/options');
+    buffer = require('vinyl-buffer');
 
-module.exports = function(gulp, newBrowserifyOptions) {
+module.exports = function(gulp, options) {
   var browserifyBundler;
-
-  options.updateOptions(newBrowserifyOptions);
 
   function configureBrowserify(browserifyBundler) {
     browserifyBundler.add(options.browserify.root);
@@ -20,8 +17,8 @@ module.exports = function(gulp, newBrowserifyOptions) {
       } else {
         browserifyBundler.transform(transform);
       }
-    })
-  };
+    });
+  }
 
   /* Reduce all javascript to app.js */
   function buildApp() {
@@ -41,7 +38,7 @@ module.exports = function(gulp, newBrowserifyOptions) {
       .pipe($.util.env.type === 'production' ? $.uglify() : $.util.noop())
       .pipe($.util.env.type !== 'production' ? $.sourcemaps.write('./') : $.util.noop())
       .pipe(gulp.dest(options.browserify.dist));
-  };
+  }
 
   if (!options.browserify.skip) {
     /* Reduce all javascript to app.js */
@@ -67,5 +64,5 @@ module.exports = function(gulp, newBrowserifyOptions) {
       });
       return browserifyBundler;
     }
-  }
+  };
 };

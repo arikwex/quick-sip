@@ -1,10 +1,8 @@
 var $ = require('gulp-load-plugins')({}),
     log = require('color-log'),
-    currentDateTime = require('./utils/currentDateTime'),
-    options = require('./utils/options');
+    currentDateTime = require('./utils/currentDateTime');
 
-module.exports = function(gulp, newStylesOptions) {
-  options.updateOptions(newStylesOptions);
+module.exports = function(gulp, options) {
 
   if (!options.styles.skip) {
     /* Build all styles */
@@ -23,7 +21,7 @@ module.exports = function(gulp, newStylesOptions) {
           }
         }))
         .pipe($.autoprefixer())
-        .pipe(gulp.dest(options.styles.dist))
+        .pipe(gulp.dest(options.styles.dist));
     });
   }
 };
