@@ -9,7 +9,7 @@
     "url": "https://github.com/arikwex/quick-sip/issues"
   },
   "license": "MIT",
-  "version": "0.2.0",
+  "version": "0.1.5",
   "dependencies": {
     "browserify": "^10.2.6",
     "color-log": "0.0.2",
@@ -31,5 +31,37 @@
   },
   "engines": {
     "node": ">=0.8.0"
-  }
+  },
+  "gitHead": "139fa9124c0fd182ba19ca5bc2a975599cc91f1d",
+  "homepage": "https://github.com/arikwex/quick-sip#readme",
+  "_id": "quick-sip@0.1.5",
+  "scripts": {},
+  "_shasum": "f5c9cdabc00c927f7aa91b5c1bef48b582d642dd",
+  "_from": "quick-sip@",
+  "_npmVersion": "2.11.1",
+  "_nodeVersion": "0.12.0",
+  "_npmUser": {
+    "name": "jyoung",
+    "email": "jyoung@vecna.com"
+  },
+  "dist": {
+    "shasum": "f5c9cdabc00c927f7aa91b5c1bef48b582d642dd",
+    "tarball": "http://registry.npmjs.org/quick-sip/-/quick-sip-0.1.5.tgz"
+  },
+  "maintainers": [
+    {
+      "name": "arikwex",
+      "email": "arielwex@gmail.com"
+    },
+    {
+      "name": "kentmw",
+      "email": "kentmw@gmail.com"
+    },
+    {
+      "name": "jyoung",
+      "email": "jyoung@vecna.com"
+    }
+  ],
+  "directories": {},
+  "_resolved": "https://registry.npmjs.org/quick-sip/-/quick-sip-0.1.5.tgz"
 }
