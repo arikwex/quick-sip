@@ -5,7 +5,7 @@ var _ = require('lodash'),
 // This options object should be generated once for each execution of quick-sip
 // and passed into all task registrations that require this object
 module.exports = function() {
-  var topLevelDefaults = {
+  var baseDefaults = {
         taskPrefix: '',
         src: 'app',
         dist: 'dist',
@@ -16,7 +16,7 @@ module.exports = function() {
       },
       options;
 
-  // Generate defaults from an options parameter
+  // Generate bundle defaults from an options parameter
   function generateBundleDefaults(opts) {
     return {
       clean: {
@@ -47,12 +47,12 @@ module.exports = function() {
     };
   }
 
-  options = _.merge({}, topLevelDefaults, generateBundleDefaults(topLevelDefaults));
+  options = _.merge({}, baseDefaults, generateBundleDefaults(baseDefaults));
 
   // Update options
-  // For certain options, if a key isn't defined at the bundle level, it will default to the value specified at the top level
+  // For certain options, if a key isn't defined at the task level, it will default to the value specified at the top level
   options.update = function(newOptions) {
-    var bundleDefaults = generateBundleDefaults(newOptions);
+    var bundleDefaults = generateBundleDefaults(_.merge({}, baseDefaults, newOptions));
 
     return _.merge(options, bundleDefaults, newOptions);
   };
