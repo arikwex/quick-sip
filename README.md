@@ -193,7 +193,10 @@ With no configuration quick-sip will save the css file to `'[your project]/dist/
 Whether the styles (`copy-resources`) task should be skipped (`true`) or run (`false`).
 
 ##### [`copy.src`=`options.src`]
-The source directory to copy from.  The task will copy all files matching:
+The source directory to copy from. This can take either a single directory location or an array of locations. In the case you configure it with an array, it
+will use the single exclusion settings for ALL configured locations.
+
+The task will copy all files matching:
 ```javascript
 [
   options.copy.src + '/**/*.*',
