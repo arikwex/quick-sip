@@ -7,7 +7,9 @@ module.exports = function(gulp, options) {
     /* Clean the options.clean.dist directory */
     gulp.task(options.taskPrefix + 'clean', function(callback) {
       log.mark('[CLEAN] deleting ' + options.clean.dist);
-      del(options.clean.dist, callback);
+      del(options.clean.dist, options.clean).then(function() {
+        callback();
+      });
     });
   }
 };

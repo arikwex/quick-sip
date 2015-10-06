@@ -13,7 +13,7 @@
   "dependencies": {
     "browserify": "^10.2.6",
     "color-log": "0.0.2",
-    "del": "^1.2.0",
+    "del": "2.0.2",
     "gulp-autoprefixer": "^2.3.1",
     "gulp-concat": "^2.6.0",
     "gulp-cssmin": "^0.1.7",
