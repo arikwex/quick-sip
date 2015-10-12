@@ -34,8 +34,9 @@ module.exports = function() {
       },
       styles: {
         skip: false,
-        includes: [],
         root: opts.src + '/app.scss',
+        src: opts.src,
+        includes: [],
         dist: opts.dist
       },
       copy: {
