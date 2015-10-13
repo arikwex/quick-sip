@@ -46,7 +46,7 @@ module.exports = function(gulp, options) {
 
     if (!options.styles.skip) {
       buildTasks.push(options.taskPrefix + 'build-styles');
-      gulp.watch(options.styles.src, ['build-styles']);
+      gulp.watch(options.styles.src + '/**/*.scss', [options.taskPrefix + 'build-styles']);
     }
 
     if (!options.copy.skip) {

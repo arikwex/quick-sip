@@ -3,10 +3,10 @@
   "description": "Gulp build process tasks that provide watchify and sass compilation.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/arikwex/quick-sip"
+    "url": "https://github.com/vecnatechnologies/quick-sip"
   },
   "bugs": {
-    "url": "https://github.com/arikwex/quick-sip/issues"
+    "url": "https://github.com/vecnatechnologies/quick-sip/issues"
   },
   "license": "MIT",
   "version": "0.1.8",
